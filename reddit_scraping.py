@@ -9,18 +9,23 @@ URL_MULTI_SPORTS = 'http://www.reddit.com/r/nba+nfl.rss'
 URL_COMMENTS = 'https://www.reddit.com/r/instant_regret/comments/6v0f48/girl_drops_phone_from_car_driver_proceeds_to_run/.rss'
 
 
-def print_scrape():
-    client = urlopen(URL_SUB_NEWS)
+def print_top_entry():
+
+    url = URL_FRONTPAGE
+
+    client = urlopen(url)
     xml_page = client.read()
     client.close()
 
     soup_page = soup(xml_page, "xml")
     entry_list = soup_page.findAll("entry")
 
+    print("URL: {0}".format(url.strip('rss.')))
     for entry in entry_list:
         print(entry.title.text)
         print(entry.link.attrs['href'])
         # print(entry.updated.text)
         print("-" * 100)
 
-print_scrape()
+if __name__ == "__main__":
+    print_top_entry()
