@@ -2,10 +2,10 @@ import time
 
 
 def timing_function(some_function):
-    '''
+    """
     Prints the time it took to run the passed function in seconds
     e.g. myFunction 0.010455
-    '''
+    """
 
     def wrapper():
         t1 = time.time()
@@ -16,12 +16,12 @@ def timing_function(some_function):
 
 
 def singleton(cls):
-    '''
+    """
     Defines a singleton. Usage:
         @singleton
         class MyClass:
             ...
-    '''
+    """
     instances = {}
     def getinstance():
         if cls not in instances:
@@ -31,12 +31,12 @@ def singleton(cls):
 
 
 def attrs(**kwds):
-    '''
+    """
     Attach attributes to functions(like C#?). Usage:
         @attrs(author="pepe", version="0.1")
         def mymethod(f):
             ...
-    '''
+    """
     def decorate(f):
         for k in kwds:
             setattr(f, k, kwds[k])
@@ -45,12 +45,12 @@ def attrs(**kwds):
 
 
 def accepts(*types):
-    '''
+    """
     Enforce function argument.
         @accepts(int, (int,float))
         def func(arg1, arg2):
             return arg1 * arg2
-    '''
+    """
     def check_accepts(f):
         assert len(types) == f.func_code.co_argcount
         def new_f(*args, **kwds):
@@ -64,12 +64,12 @@ def accepts(*types):
 
 
 def returns(rtype):
-    '''
+    """
     Enforce return types.
         @returns((int,float))
         def func(arg1, arg2):
             return arg1 * arg2
-    '''
+    """
     def check_returns(f):
         def new_f(*args, **kwds):
             result = f(*args, **kwds)

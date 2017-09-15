@@ -1,3 +1,8 @@
+import datetime
+import re
+import time
+
+
 def _int2bin(self, i):
     """ Returns string representation of binary value using bitwise operation """
     if i == 0:
@@ -12,3 +17,4 @@ def _int2bin(self, i):
         i = i / 2           # shifts bits down one, e.g. 101 -> 10
 
     return s
+
