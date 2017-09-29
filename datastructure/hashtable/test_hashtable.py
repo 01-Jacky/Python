@@ -3,7 +3,9 @@ import hashtable
 
 class TestStringMethods(unittest.TestCase):
     def setUp(self):
-        hashtable.HashTable(100)
+        self.alphabet_map = hashtable.HashTable(27)
+        for i in range(1, 26+1):
+            self.alphabet_map.set(chr(ord('a')+i-1), i)
 
     def test_constructor(self):
         hashmap = hashtable.HashTable()          # hashmap constructors with some default fixed bin size > 1
@@ -28,16 +30,15 @@ class TestStringMethods(unittest.TestCase):
             hashmap.set(4, "this should not get set")
         self.assertEqual(hashmap.size, 3)
 
-    def test_get(self):
-        hashmap = hashtable.HashTable()
-        hashmap.set('a', 1)
-        hashmap.set('b', 2)
-        hashmap.set('c', 3)
+    def test_set_update_value(selfs):
+        pass
 
-        self.assertEqual(hashmap.get('c'), 3)
-        self.assertEqual(hashmap.get('a'), 1)
-        self.assertEqual(hashmap.get('b'), 2)
-        self.assertEqual(hashmap.get('z'), None)
+    def test_get(self):
+        self.assertEqual(self.alphabet_map.get('c'), 3)
+        self.assertEqual(self.alphabet_map.get('a'), 1)
+        self.assertEqual(self.alphabet_map.get('b'), 2)
+        self.assertEqual(self.alphabet_map.get('z'), 26)
+        self.assertEqual(self.alphabet_map.get('I am not an existing key'), None)
 
     def test_delete(self):
         hashmap = hashtable.HashTable()

@@ -18,9 +18,9 @@ class HashTable:
     All linked list are trailer linked list to make deletion easier (there's always an empty node at the end).
         i.e. deletion works by copying next Node's value and next pointer into the current node
     """
-    def __init__(self, size=10):
+    def __init__(self, items=100):
         self.size = 0
-        self.bins = [Node(None)] * size
+        self.bins = [Node(None)] * items    # 1 bin for each item but there will still be some collisions
 
     # Queries
     def get(self, key):
@@ -56,24 +56,32 @@ class HashTable:
 
     # Commands
     def set(self, key, value):
-        if self.load() >= 1:
-            raise ValueError("Load is above 1 for this fixed sized hash table. Failed to insert")
         if not isinstance(key, str):
             raise TypeError("Key must be a string")
 
         bin_num = self._get_bin(key)
         cur = self.bins[bin_num]
 
-        if cur.next is None:
+        if cur.next is None:                        # First element is trailer node
+            if self.load() >= 1:
+                raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
             self.bins[bin_num] = Node((key, value), cur)
-        else:
+            success = True
+        elif cur.value[0] == key:                   # Overwrite existing key
+            cur.value = (cur.value[0], value)
+            success = False
+        else:                                       # Check next node in linked list
             while cur.next is not None:
                 prev = cur
                 cur = cur.next
+            if self.load() >= 1:
+                raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
             prev.next = Node((key, value), cur)
+            success = True
 
-        self.size += 1
-        return True
+        if success:
+            self.size += 1
+        return success
 
     # Helpers
     def _hash(self, key):
@@ -96,14 +104,19 @@ class HashTable:
 
         return None
 
-    def _printBins(self):
+    def _ensure_load(self):
+        if self.load() >= 1:
+            raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
+
+
+    def printBins(self):
         for i in range(len(self.bins)):
             s = "Bin #" + str(i) + ': '
 
             cur = self.bins[i]
             if cur.next is not None:
                 while cur.next is not None:
-                    s += '({}, {})'.format(cur.value[0], cur.value[1])
+                    s += '({}, {}) '.format(cur.value[0], str(cur.value[1]))    # Keys are strings but value must be obj with a str method
                     cur = cur.next
             print(s)
             i += 1
@@ -111,21 +124,10 @@ class HashTable:
 
 
 if __name__ == '__main__':
-
-    hashmap = HashTable()
-    print(hashmap.set('wtf',230))
-
-    for x in range(9):
+    size = 10
+    hashmap = HashTable(size)
+    for x in range(size):
         hashmap.set(
             ((random.choice(string.ascii_letters + string.digits))+(random.choice(string.ascii_letters + string.digits)))
             , random.randint(0,100))
-    hashmap._printBins()
-
-    found_node = hashmap._find_node('wtf')
-    if found_node is None:
-        print('not found')
-    else:
-        print(found_node.value)
-
-    print(hashmap.delete("wtf"))
     hashmap._printBins()
