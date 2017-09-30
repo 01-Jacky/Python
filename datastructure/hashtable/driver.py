@@ -6,20 +6,20 @@ class Command:
         self.key = key
         self.description = description
 
+PRINT = Command('p', 'print representation of hashtable')
 SET = Command('s', 'insert item')
 GET = Command('g', 'get item')
 DELETE = Command('d', 'delete item')
 LOAD = Command('l', 'print current load')
-PRINT = Command('p', 'print representation of hashtable')
 QUIT = Command('q', 'quit')
 HELP = Command('h', 'show list of commands')
 
 COMMANDS = [
+    PRINT,
     SET,
     GET,
     DELETE,
     LOAD,
-    PRINT,
     QUIT,
     HELP,
 ]
@@ -31,11 +31,13 @@ def print_help():
         print(format_string.format(command.key, command.description))
     print()
 
+# Main
+action = None
+size = int(input('Enter the # of elements to hold in hashtable: '))
+hashtable = hashtable.HashTable(size)
 
 print_help()
-action = None
-size = int(input('Enter # of bins for hashtable: '))
-hashtable = hashtable.HashTable(size)
+print('')
 
 while action is not QUIT.key:
     action = input('Enter a command: ')
@@ -43,9 +45,7 @@ while action is not QUIT.key:
         if action is SET.key:
             key = input('key: ')
             value = input('value: ')
-
             hashtable.set(key, value)
-
         if action is GET.key:
             key = input('key: ')
             retrieved = hashtable.get(key)
@@ -55,7 +55,11 @@ while action is not QUIT.key:
                 print('Retrieved value: ' + retrieved)
         if action is DELETE.key:
             key = input('key: ')
-            print('Deleted value: ' + hashtable.delete(key))
+            deleted = hashtable.delete(key)
+            if deleted is None:
+                print('Did not find key with value ' + key)
+            else:
+                print('Deleted value: ' + deleted)
         if action is LOAD.key:
             print(hashtable.load())
         if action is PRINT.key:
@@ -63,11 +67,6 @@ while action is not QUIT.key:
         if action is HELP.key:
             print_help()
         print('')
-
     except ValueError as e:
         print('Error: {}\n'.format(str(e)))
-
-
-
-
 

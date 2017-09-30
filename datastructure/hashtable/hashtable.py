@@ -22,6 +22,18 @@ class HashTable:
         self.size = 0
         self.bins = [Node(None)] * items    # 1 bin for each item but there will still be some collisions
 
+    def printBins(self):
+        for i in range(len(self.bins)):
+            s = "Bin #" + str(i) + ': '
+
+            cur = self.bins[i]
+            if cur.next is not None:
+                while cur.next is not None:
+                    s += '({}, {}) '.format(cur.value[0], str(cur.value[1]))    # Keys are strings but value must be obj with a str method
+                    cur = cur.next
+            print(s)
+            i += 1
+
     # Queries
     def get(self, key):
         """ return the value associated with the given key, or null if no value is set """
@@ -107,27 +119,3 @@ class HashTable:
     def _ensure_load(self):
         if self.load() >= 1:
             raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
-
-
-    def printBins(self):
-        for i in range(len(self.bins)):
-            s = "Bin #" + str(i) + ': '
-
-            cur = self.bins[i]
-            if cur.next is not None:
-                while cur.next is not None:
-                    s += '({}, {}) '.format(cur.value[0], str(cur.value[1]))    # Keys are strings but value must be obj with a str method
-                    cur = cur.next
-            print(s)
-            i += 1
-
-
-
-if __name__ == '__main__':
-    size = 10
-    hashmap = HashTable(size)
-    for x in range(size):
-        hashmap.set(
-            ((random.choice(string.ascii_letters + string.digits))+(random.choice(string.ascii_letters + string.digits)))
-            , random.randint(0,100))
-    hashmap._printBins()
