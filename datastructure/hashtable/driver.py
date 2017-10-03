@@ -46,26 +46,28 @@ while action is not QUIT.key:
             key = input('key: ')
             value = input('value: ')
             hashtable.set(key, value)
-        if action is GET.key:
+        elif action is GET.key:
             key = input('key: ')
             retrieved = hashtable.get(key)
             if retrieved is None:
                 print('Did not find key with value ' + key)
             else:
                 print('Retrieved value: ' + retrieved)
-        if action is DELETE.key:
+        elif action is DELETE.key:
             key = input('key: ')
             deleted = hashtable.delete(key)
             if deleted is None:
                 print('Did not find key with value ' + key)
             else:
                 print('Deleted value: ' + deleted)
-        if action is LOAD.key:
+        elif action is LOAD.key:
             print(hashtable.load())
-        if action is PRINT.key:
+        elif action is PRINT.key:
             hashtable.printBins()
-        if action is HELP.key:
+        elif action is HELP.key:
             print_help()
+        else:
+            print('Command not recongized. Type h for list of command')
         print('')
     except ValueError as e:
         print('Error: {}\n'.format(str(e)))

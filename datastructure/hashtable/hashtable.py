@@ -1,6 +1,3 @@
-import random, string
-
-
 class Node:
     """ Helper class to create linked list"""
     def __init__(self, value, next=None):
@@ -29,7 +26,7 @@ class HashTable:
             cur = self.bins[i]
             if cur.next is not None:
                 while cur.next is not None:
-                    s += '({}, {}) '.format(cur.value[0], str(cur.value[1]))    # Keys are strings but value must be obj with a str method
+                    s += '({}, {}) '.format(cur.value[0], str(cur.value[1]))    # Keys are strings but objs as values would need a str method
                     cur = cur.next
             print(s)
             i += 1
@@ -52,42 +49,40 @@ class HashTable:
         if node_to_delete is None:
             return None
         else:
-            # Using linked list with trailer node allows us to do use this trick to delete current node easily
-            # without checking if the node is the last one
+            # Linked list with trailer node allows deleting current node easily without checking if the node is the last one
             deleted_value = node_to_delete.value[1]
             node_to_delete.value = node_to_delete.next.value
             node_to_delete.next = node_to_delete.next.next
             self.size -= 1
             if self.size < 0:
                 raise ValueError("size fell below 0")
-
             return deleted_value
 
     def load(self):
+        """ return a float value representing the load factor """
         return self.size/float(len(self.bins))           # Don't necessary need this in Python 3
 
     # Commands
     def set(self, key, value):
+        """ stores the given key/value pair in the hash map """
         if not isinstance(key, str):
             raise TypeError("Key must be a string")
 
         bin_num = self._get_bin(key)
         cur = self.bins[bin_num]
 
-        if cur.next is None:                        # First element is trailer node
-            if self.load() >= 1:
-                raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
+        if cur.next is None:                        # If first element is trailer node, insert here
+            self._ensure_load()
             self.bins[bin_num] = Node((key, value), cur)
             success = True
-        elif cur.value[0] == key:                   # Overwrite existing key
+        elif cur.value[0] == key:                   # If existing key, overwrite
             cur.value = (cur.value[0], value)
             success = False
-        else:                                       # Check next node in linked list
+        else:                                       # Move towards end of linked list
             while cur.next is not None:
                 prev = cur
                 cur = cur.next
-            if self.load() >= 1:
-                raise ValueError("Load is above 1 for this fixed sized hash table (# of items = max size). Failed to insert")
+            self._ensure_load()
             prev.next = Node((key, value), cur)
             success = True
 
@@ -95,7 +90,7 @@ class HashTable:
             self.size += 1
         return success
 
-    # Helpers
+    # Helper functions
     def _hash(self, key):
         hash_code = 0
         for char in key:
@@ -113,7 +108,6 @@ class HashTable:
             if cur.value[0] == key:
                 return cur
             cur = cur.next
-
         return None
 
     def _ensure_load(self):
