@@ -34,4 +34,4 @@ def _edit_distance_helper(str1, str2, m, n):
 
 
 if __name__ == "__main__":
-    print edit_distance("xxxxx", "xxxxxxxax")
+    pass

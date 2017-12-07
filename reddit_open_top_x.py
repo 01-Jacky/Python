@@ -1,20 +1,19 @@
 """ Opens top x links from reddit all as tabs in your browser """
 
 from bs4 import BeautifulSoup as soup
-from urllib import urlopen
+import urllib.request
 import webbrowser
 
 
-URL_FRONTPAGE = 'https://www.reddit.com/all/.rss'
+URL_FRONTPAGE = 'https://www.reddit.com/r/all/.rss'
 MAX_BROWSERS_TO_OPEN = 5
 
 
 def main():
-    client = urlopen(URL_FRONTPAGE)
-    xml_page = client.read()
-    client.close()
+    with urllib.request.urlopen(URL_FRONTPAGE) as response:
+        html = response.read()
 
-    soup_page = soup(xml_page, "xml")
+    soup_page = soup(html, "xml")
     entry_list = soup_page.findAll("entry")
 
     if len(entry_list) > MAX_BROWSERS_TO_OPEN:
