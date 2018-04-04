@@ -5,8 +5,8 @@ from decimal import *
 # Configs
 DYNAMODB_PARAMS = {
     'region_name' : 'us-west-2',
-    'aws_access_key_id' : 'AKIAJK2D4VY67U2AJETA',
-    'aws_secret_access_key' : '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',
+    'aws_access_key_id' : '',
+    'aws_secret_access_key' : '',
 }
 ROUTE_TABLE_NAME = 'Routes'
 
